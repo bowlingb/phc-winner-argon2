@@ -45,7 +45,6 @@ static void benchmark() {
     uint32_t t_cost = 1;
     uint32_t m_cost;
     uint32_t thread_test[6] = {1, 2, 4, 6, 8, 16};
-
     memset(pwd_array, 0, inlen);
     memset(salt_array, 1, inlen);
 
