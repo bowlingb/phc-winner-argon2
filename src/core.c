@@ -88,7 +88,7 @@ int allocate_memory(block **memory, uint32_t m_cost) {
             return ARGON2_MEMORY_ALLOCATION_ERROR;
         }
 
-        *memory = (block *)calloc(memory_size, 1); /*2. Try to allocate*/
+        *memory = (block *)malloc(memory_size); /*2. Try to allocate*/
 
         if (!*memory) {
             return ARGON2_MEMORY_ALLOCATION_ERROR;
@@ -103,7 +103,7 @@ void NOT_OPTIMIZED secure_wipe_memory(void *v, size_t n) {
 #if defined(_MSC_VER) && VC_GE_2005(_MSC_VER)
     SecureZeroMemory(v, n);
 #elif defined memset_s
-    memset_s(v, n);
+    memset_s(v, n, 0, n);
 #elif defined(__OpenBSD__)
     explicit_bzero(v, n);
 #else
@@ -508,7 +508,7 @@ void initial_hash(uint8_t *blockhash, argon2_context *context,
     store32(&value, context->t_cost);
     blake2b_update(&BlakeHash, (const uint8_t *)&value, sizeof(value));
 
-    store32(&value, ARGON2_VERSION_NUMBER);
+    store32(&value, context->version);
     blake2b_update(&BlakeHash, (const uint8_t *)&value, sizeof(value));
 
     store32(&value, (uint32_t)type);
